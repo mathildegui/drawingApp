@@ -9,4 +9,7 @@
     <string name="action_brush">Brush</string>
     <string name="action_color">Color</string>
     <string name="action_save">Save</string>
+
+    <string name="delete_drawing">Delete</string>
+    <string name="new_drawing_warning">Are you sure you want to create a new draw ?</string>
 </resources>

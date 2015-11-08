@@ -1,5 +1,7 @@
 package com.mathilde.drawingapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +15,14 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar_bottom;
     private FloatingActionButton mFab;
 
+    private CustomView mCustomView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCustomView     = (CustomView) findViewById(R.id.custom_view);
         mToolbar_top    = (Toolbar) findViewById(R.id.toolbar);
         mToolbar_bottom = (Toolbar) findViewById(R.id.toolbar_bottom);
 
@@ -44,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleDrawingIconTouched(int itemId) {
         switch(itemId) {
-
+            case R.id.action_delete:
+                deleteDialog();
+                break;
         }
     }
 
@@ -68,5 +75,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteDialog() {
+        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(this);
+        deleteDialog.setTitle(R.string.delete_drawing);
+        deleteDialog.setMessage(R.string.new_drawing_warning);
+        deleteDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mCustomView.eraseAll();
+                dialog.dismiss();
+            }
+        });
+        deleteDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        deleteDialog.show();
     }
 }

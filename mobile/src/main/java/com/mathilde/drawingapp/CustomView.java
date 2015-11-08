@@ -1,19 +1,27 @@
 package com.mathilde.drawingapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mathilde on 08/11/2015.
  */
 public class CustomView extends View {
+
+    private float mX, mY;
+    private static final float TOUCH_TOLERANCE = 4;
 
     //drawing path
     private Path mDrawPath;
@@ -36,6 +44,10 @@ public class CustomView extends View {
 
     //brush size
     private float mCurrentBrushSize, mLastBrushSize;
+
+    //list for redo and undo actions
+    private List<Path> paths = new ArrayList<>();
+    private List<Path> undonePaths = new ArrayList<>();
 
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,7 +74,10 @@ public class CustomView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
-        canvas.drawBitmap(mBitmap, 0, 0, mCanvasPaint);
+        //canvas.drawBitmap(mBitmap, 0, 0, mCanvasPaint);
+        for(Path p : paths) {
+            canvas.drawPath(p, mDrawPaint);
+        }
         canvas.drawPath(mDrawPath, mDrawPaint);
     }
 
@@ -88,22 +103,55 @@ public class CustomView extends View {
         //respond to down, up and move events
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mDrawPath.moveTo(touchX, touchY);
+                touch_start(touchX, touchY);
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                mDrawPath.lineTo(touchX, touchY);
+                touch_move(touchX, touchY);
+                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-                mDrawPath.lineTo(touchX, touchY);
-                mCanvas.drawPath(mDrawPath, mDrawPaint);
-                mDrawPath.reset();
+                touch_up();
+                invalidate();
                 break;
             default:
                 return false;
         }
-
-        //redrw
-        invalidate();
         return true;
+    }
+
+    private void touch_start(float x, float y) {
+        undonePaths.clear();
+        mDrawPath.reset();
+        mDrawPath.moveTo(x, y);
+
+        mX = x;
+        mY = y;
+    }
+
+    private void touch_move(float x, float y) {
+        float dx = Math.abs(x - mX);
+        float dy = Math.abs(y - mY);
+        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+            mDrawPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
+            mX = x;
+            mY = y;
+        }
+    }
+
+    private void touch_up() {
+        mDrawPath.lineTo(mX, mY);
+        mCanvas.drawPath(mDrawPath, mDrawPaint);
+        paths.add(mDrawPath);
+        mDrawPath = new Path();
+    }
+
+    /* Start new drawing */
+    public void eraseAll() {
+        //mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        mDrawPath = new Path();
+        paths.clear();
+        mCanvas.drawColor(Color.WHITE);
+        invalidate();
     }
 }
