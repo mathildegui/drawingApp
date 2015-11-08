@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -60,16 +61,49 @@ public class CustomView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
+        canvas.drawBitmap(mBitmap, 0, 0, mCanvasPaint);
+        canvas.drawPath(mDrawPath, mDrawPaint);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        //create canvas of certain device size
         super.onSizeChanged(w, h, oldw, oldh);
+
+        //create Bitmap of certain w,.h
+        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+
+        //apply bitmap to graphic to start drawing
+        mCanvas = new Canvas(mBitmap);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        //return super.onTouchEvent(event);
+
+        float touchX = event.getX();
+        float touchY = event.getY();
+
+        //respond to down, up and move events
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDrawPath.moveTo(touchX, touchY);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mDrawPath.lineTo(touchX, touchY);
+                break;
+            case MotionEvent.ACTION_UP:
+                mDrawPath.lineTo(touchX, touchY);
+                mCanvas.drawPath(mDrawPath, mDrawPaint);
+                mDrawPath.reset();
+                break;
+            default:
+                return false;
+        }
+
+        //redrw
+        invalidate();
+        return true;
     }
 }
