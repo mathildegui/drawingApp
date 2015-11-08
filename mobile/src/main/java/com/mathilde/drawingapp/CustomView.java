@@ -154,4 +154,18 @@ public class CustomView extends View {
         mCanvas.drawColor(Color.WHITE);
         invalidate();
     }
+
+    public void undo() {
+        if(paths.size() > 0) {
+            undonePaths.add(paths.remove(paths.size() - 1));
+            invalidate();
+        }
+    }
+
+    public void redo() {
+        if(undonePaths.size() > 0) {
+            paths.add(undonePaths.remove(undonePaths.size() - 1));
+            invalidate();
+        }
+    }
 }

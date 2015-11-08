@@ -12,4 +12,6 @@
 
     <string name="delete_drawing">Delete</string>
     <string name="new_drawing_warning">Are you sure you want to create a new draw ?</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_share">Share</string>
 </resources>

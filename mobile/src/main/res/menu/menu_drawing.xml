@@ -22,6 +22,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_redo"
+        android:title="@string/action_redo"
+        android:icon="@drawable/ic_redo_variant_white_36dp"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_brush"
         android:title="@string/action_brush"
         android:icon="@drawable/ic_brush_white_24dp"
@@ -37,5 +43,11 @@
         android:id="@+id/action_save"
         android:title="@string/action_save"
         android:icon="@drawable/ic_sd_white_24dp"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:icon="@drawable/ic_action_share"
         app:showAsAction="always" />
 </menu>
