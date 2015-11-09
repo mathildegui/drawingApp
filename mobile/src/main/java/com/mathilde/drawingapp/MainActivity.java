@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         Helper.init(this);
         setSupportActionBar(mToolbar_top);
 
+        mCustomView.setSaveEnabled(true);
+
         mToolbar_bottom.inflateMenu(R.menu.menu_drawing);
         mToolbar_bottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

@@ -1,14 +1,15 @@
 package com.mathilde.drawingapp;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -46,8 +47,18 @@ public class CustomView extends View {
     private float mCurrentBrushSize, mLastBrushSize;
 
     //list for redo and undo actions
-    private List<Path> paths = new ArrayList<>();
+    private List<Path> paths       = new ArrayList<>();
     private List<Path> undonePaths = new ArrayList<>();
+
+
+    /**
+     *
+     */
+    private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>(100);
+
+    public CustomView(Context context) {
+        super(context);
+    }
 
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -86,6 +97,11 @@ public class CustomView extends View {
         //create canvas of certain device size
         super.onSizeChanged(w, h, oldw, oldh);
 
+        Log.d("W", w + "");
+        Log.d("H", h + "");
+        Log.d("oldw", oldw + "");
+        Log.d("oldh", oldh + "");
+
         //create Bitmap of certain w,.h
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 
@@ -112,6 +128,7 @@ public class CustomView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 touch_up();
+                eventList.add(MotionEvent.obtain(event));
                 invalidate();
                 break;
             default:
@@ -168,5 +185,87 @@ public class CustomView extends View {
             paths.add(undonePaths.remove(undonePaths.size() - 1));
             invalidate();
         }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        //return super.onSaveInstanceState();
+        //begin boilerplate code that allows parent classes to save state
+        Parcelable superState = super.onSaveInstanceState();
+
+        SavedState ss = new SavedState(superState);
+        //end
+
+        ss.savedX = this.mX;
+        ss.savedY = this.mY;
+        ss.savedPaths = this.paths;
+        ss.savedUndonePaths = this.undonePaths;
+
+        return ss;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        //begin boilerplate code so parent classes can restore state
+        if(!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState ss = (SavedState)state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        //end
+
+        this.mX          = ss.savedX;
+        this.mY          = ss.savedY;
+        this.paths       = ss.savedPaths;
+        this.undonePaths = ss.savedUndonePaths;
+    }
+
+    static class SavedState extends BaseSavedState {
+        float savedY, savedX;
+        //list for redo and undo actions
+        private List<Path> savedPaths       = new ArrayList<>();
+        private List<Path> savedUndonePaths = new ArrayList<>();
+        private Canvas savedCanvas;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @SuppressWarnings("unchecked")
+        private SavedState(Parcel in) {
+            super(in);
+
+            this.savedX = in.readFloat();
+            this.savedY = in.readFloat();
+
+            in.readList(savedPaths, Path.class.getClassLoader());
+            in.readList(savedUndonePaths, Path.class.getClassLoader());
+
+            /*mPaths.addAll(mPaths);
+            mUndonePaths.addAll(mUndonePaths);*/
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeFloat(this.savedX);
+            out.writeFloat(this.savedY);
+            out.writeList(this.savedPaths);
+            out.writeList(this.savedUndonePaths);
+            //out.writeParcelable(this.savedCanvas, 1);
+        }
+
+        //required field that makes Parcelables from a Parcel
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
     }
 }
