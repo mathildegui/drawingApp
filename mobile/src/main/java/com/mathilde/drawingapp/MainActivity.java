@@ -3,29 +3,27 @@ package com.mathilde.drawingapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import utils.Helper;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar_top;
-    private Toolbar mToolbar_bottom;
-    private FloatingActionButton mFab;
-
-    private CustomView mCustomView;
+    @Bind(R.id.toolbar) Toolbar mToolbar_top;
+    @Bind(R.id.custom_view) CustomView mCustomView;
+    @Bind(R.id.toolbar_bottom) Toolbar mToolbar_bottom;
+    //@Bind(R.id.fab) FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCustomView     = (CustomView) findViewById(R.id.custom_view);
-        mToolbar_top    = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar_bottom = (Toolbar) findViewById(R.id.toolbar_bottom);
-
+        Helper.init(this);
         setSupportActionBar(mToolbar_top);
 
         mToolbar_bottom.inflateMenu(R.menu.menu_drawing);

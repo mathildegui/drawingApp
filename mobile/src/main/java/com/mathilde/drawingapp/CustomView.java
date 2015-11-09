@@ -151,6 +151,7 @@ public class CustomView extends View {
         //mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         mDrawPath = new Path();
         paths.clear();
+        undonePaths.clear();
         mCanvas.drawColor(Color.WHITE);
         invalidate();
     }
