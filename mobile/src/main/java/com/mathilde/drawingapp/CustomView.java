@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -28,9 +29,6 @@ public class CustomView extends View {
     //drawing path
     private Path mDrawPath;
 
-    //defines what to draw
-    private Paint mCanvasPaint;
-
     //defines how to draw
     private Paint mDrawPaint;
 
@@ -41,22 +39,12 @@ public class CustomView extends View {
     //transfert them in views
     private Canvas mCanvas;
 
-    //canvas bitmap
-    private Bitmap mBitmap;
-
     //brush size
     private float mCurrentBrushSize, mLastBrushSize;
 
     //list for redo and undo actions
-    /*private List<Path> paths       = new ArrayList<>();
-    private List<Path> undonePaths = new ArrayList<>();*/
-    private List<Pair<Path, Integer>> paths = new ArrayList<Pair<Path,Integer>>();
-    private List<Pair<Path, Integer>> undonePaths = new ArrayList<Pair<Path,Integer>>();
-
-    /**
-     *
-     */
-    private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>(100);
+    private List<Pair<Path, Integer>> paths = new ArrayList<>();
+    private List<Pair<Path, Integer>> undonePaths = new ArrayList<>();
 
     public CustomView(Context context) {
         super(context);
@@ -92,29 +80,16 @@ public class CustomView extends View {
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        mCanvasPaint = new Paint(Paint.DITHER_FLAG);
+        //Paint mCanvasPaint = new Paint(Paint.DITHER_FLAG);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //super.onDraw(canvas);
-        //canvas.drawBitmap(mBitmap, 0, 0, mCanvasPaint);
-
-
         for(Pair<Path, Integer> p : paths) {
             mDrawPaint.setColor(p.second);
             canvas.drawPath(p.first, mDrawPaint);
         }
         canvas.drawPath(mDrawPath, mDrawPaint);
-
-
-
-
-        /*for (Pair<Path,Integer> path_clr : path_color_list ){
-            mDrawPaint.setColor(path_clr.second);
-            canvas.drawPath( path_clr.first, mDrawPaint);
-        }
-        canvas.drawPath(mDrawPath, mDrawPaint);*/
     }
 
     @Override
@@ -128,14 +103,14 @@ public class CustomView extends View {
         Log.d("oldh", oldh + "");
 
         //create Bitmap of certain w,.h
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 
         //apply bitmap to graphic to start drawing
-        mCanvas = new Canvas(mBitmap);
+        mCanvas = new Canvas(bitmap);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         //return super.onTouchEvent(event);
 
         float touchX = event.getX();
@@ -153,7 +128,6 @@ public class CustomView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 touch_up();
-                eventList.add(MotionEvent.obtain(event));
                 invalidate();
                 break;
             default:
@@ -215,17 +189,11 @@ public class CustomView extends View {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        //return super.onSaveInstanceState();
-        //begin boilerplate code that allows parent classes to save state
         Parcelable superState = super.onSaveInstanceState();
-
         SavedState ss = new SavedState(superState);
-        //end
 
         ss.savedX = this.mX;
         ss.savedY = this.mY;
-        /*ss.savedPaths = this.paths;
-        ss.savedUndonePaths = this.undonePaths;*/
 
         return ss;
     }
@@ -244,16 +212,10 @@ public class CustomView extends View {
 
         this.mX          = ss.savedX;
         this.mY          = ss.savedY;
-       /* this.paths       = ss.savedPaths;
-        this.undonePaths = ss.savedUndonePaths;*/
     }
 
     static class SavedState extends BaseSavedState {
         float savedY, savedX;
-        //list for redo and undo actions
-        private List<Path> savedPaths       = new ArrayList<>();
-        private List<Path> savedUndonePaths = new ArrayList<>();
-        private Canvas savedCanvas;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -265,12 +227,6 @@ public class CustomView extends View {
 
             this.savedX = in.readFloat();
             this.savedY = in.readFloat();
-
-            /*in.readList(savedPaths, Path.class.getClassLoader());
-            in.readList(savedUndonePaths, Path.class.getClassLoader());*/
-
-            /*mPaths.addAll(mPaths);
-            mUndonePaths.addAll(mUndonePaths);*/
         }
 
         @Override
@@ -278,9 +234,6 @@ public class CustomView extends View {
             super.writeToParcel(out, flags);
             out.writeFloat(this.savedX);
             out.writeFloat(this.savedY);
-            /*out.writeList(this.savedPaths);
-            out.writeList(this.savedUndonePaths);*/
-            //out.writeParcelable(this.savedCanvas, 1);
         }
 
         //required field that makes Parcelables from a Parcel

@@ -41,14 +41,46 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar_bottom) Toolbar mToolbar_bottom;
     //@Bind(R.id.fab) FloatingActionButton mFab;
 
+    private ColorPicker cp;
+    private int selectedColorRGB;
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void checkStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        verifyStoragePermissions(this);
-        Helper.init(this);
         setSupportActionBar(mToolbar_top);
 
+        checkStoragePermissions(this);
+
+        Helper.init(this);
         mCustomView.setSaveEnabled(true);
 
         mToolbar_bottom.inflateMenu(R.menu.menu_drawing);
@@ -93,24 +125,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    int defaultColorR, defaultColorG, defaultColorB;
-    private ColorPicker cp;
-
     private void changeColor() {
         getRGBFromHexa(mCustomView.getColor());
         cp.show();
 
-    /* On Click listener for the dialog, when the user select the color */
+        /* On Click listener for the dialog, when the user select the color */
         Button okColor = (Button)cp.findViewById(R.id.okColorButton);
         okColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /* You can get single channel (value 0-255) */
-                /*selectedColorR = cp.getRed();
-                selectedColorG = cp.getGreen();
-                selectedColorB = cp.getBlue();*/
-
                 /* Or the android RGB Color (see the android Color class reference) */
                 selectedColorRGB = cp.getColor();
                 mCustomView.updateColor(selectedColorRGB);
@@ -120,43 +143,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    int selectedColorRGB;
-
     private void getRGBFromHexa(int s) {
         String hexColor = String.format("%06X", (0xFFFFFF & s));
         int color = (int)Long.parseLong(hexColor, 16);
-        defaultColorR = (color >> 16) & 0xFF;
-        defaultColorG = (color >> 8) & 0xFF;
-        defaultColorB = (color >> 0) & 0xFF;
+        int defaultColorR = (color >> 16) & 0xFF;
+        int defaultColorG = (color >> 8) & 0xFF;
+        int defaultColorB = (color) & 0xFF;
         cp = new ColorPicker(MainActivity.this, defaultColorR, defaultColorG, defaultColorB);
-    }
-
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 
     private void shareImage() {
