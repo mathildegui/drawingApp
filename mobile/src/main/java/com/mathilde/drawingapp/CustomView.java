@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -47,9 +48,10 @@ public class CustomView extends View {
     private float mCurrentBrushSize, mLastBrushSize;
 
     //list for redo and undo actions
-    private List<Path> paths       = new ArrayList<>();
-    private List<Path> undonePaths = new ArrayList<>();
-
+    /*private List<Path> paths       = new ArrayList<>();
+    private List<Path> undonePaths = new ArrayList<>();*/
+    private List<Pair<Path, Integer>> paths = new ArrayList<Pair<Path,Integer>>();
+    private List<Pair<Path, Integer>> undonePaths = new ArrayList<Pair<Path,Integer>>();
 
     /**
      *
@@ -65,12 +67,10 @@ public class CustomView extends View {
     }
 
     public void updateColor (int color){
+        Pair p = new Pair(mDrawPath, color);
+        paths.add(p);
+        mDrawPath = new Path();
         mPaintColor = color;
-        mDrawPaint.setColor(mPaintColor);
-
-        //redraw all the drawing
-        //TODO we only need the next lines
-        invalidate();
     }
 
     public CustomView(Context context, AttributeSet attrs) {
@@ -99,10 +99,22 @@ public class CustomView extends View {
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
         //canvas.drawBitmap(mBitmap, 0, 0, mCanvasPaint);
-        for(Path p : paths) {
-            canvas.drawPath(p, mDrawPaint);
+
+
+        for(Pair<Path, Integer> p : paths) {
+            mDrawPaint.setColor(p.second);
+            canvas.drawPath(p.first, mDrawPaint);
         }
         canvas.drawPath(mDrawPath, mDrawPaint);
+
+
+
+
+        /*for (Pair<Path,Integer> path_clr : path_color_list ){
+            mDrawPaint.setColor(path_clr.second);
+            canvas.drawPath( path_clr.first, mDrawPaint);
+        }
+        canvas.drawPath(mDrawPath, mDrawPaint);*/
     }
 
     @Override
@@ -172,7 +184,8 @@ public class CustomView extends View {
     private void touch_up() {
         mDrawPath.lineTo(mX, mY);
         mCanvas.drawPath(mDrawPath, mDrawPaint);
-        paths.add(mDrawPath);
+        Pair p = new Pair(mDrawPath, mPaintColor);
+        paths.add(p);
         mDrawPath = new Path();
     }
 
