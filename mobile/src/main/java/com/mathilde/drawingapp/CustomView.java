@@ -198,8 +198,8 @@ public class CustomView extends View {
 
         ss.savedX = this.mX;
         ss.savedY = this.mY;
-        ss.savedPaths = this.paths;
-        ss.savedUndonePaths = this.undonePaths;
+        /*ss.savedPaths = this.paths;
+        ss.savedUndonePaths = this.undonePaths;*/
 
         return ss;
     }
@@ -218,8 +218,8 @@ public class CustomView extends View {
 
         this.mX          = ss.savedX;
         this.mY          = ss.savedY;
-        this.paths       = ss.savedPaths;
-        this.undonePaths = ss.savedUndonePaths;
+       /* this.paths       = ss.savedPaths;
+        this.undonePaths = ss.savedUndonePaths;*/
     }
 
     static class SavedState extends BaseSavedState {
@@ -240,8 +240,8 @@ public class CustomView extends View {
             this.savedX = in.readFloat();
             this.savedY = in.readFloat();
 
-            in.readList(savedPaths, Path.class.getClassLoader());
-            in.readList(savedUndonePaths, Path.class.getClassLoader());
+            /*in.readList(savedPaths, Path.class.getClassLoader());
+            in.readList(savedUndonePaths, Path.class.getClassLoader());*/
 
             /*mPaths.addAll(mPaths);
             mUndonePaths.addAll(mUndonePaths);*/
@@ -252,8 +252,8 @@ public class CustomView extends View {
             super.writeToParcel(out, flags);
             out.writeFloat(this.savedX);
             out.writeFloat(this.savedY);
-            out.writeList(this.savedPaths);
-            out.writeList(this.savedUndonePaths);
+            /*out.writeList(this.savedPaths);
+            out.writeList(this.savedUndonePaths);*/
             //out.writeParcelable(this.savedCanvas, 1);
         }
 
