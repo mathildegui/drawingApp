@@ -60,6 +60,19 @@ public class CustomView extends View {
         super(context);
     }
 
+    public int getColor(){
+        return mPaintColor;
+    }
+
+    public void updateColor (int color){
+        mPaintColor = color;
+        mDrawPaint.setColor(mPaintColor);
+
+        //redraw all the drawing
+        //TODO we only need the next lines
+        invalidate();
+    }
+
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();

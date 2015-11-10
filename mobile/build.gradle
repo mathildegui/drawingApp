@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
 
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.pes.materialcolorpicker:library:1.0.+'
 }

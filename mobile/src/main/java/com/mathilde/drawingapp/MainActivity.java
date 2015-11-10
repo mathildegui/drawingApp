@@ -17,12 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 import butterknife.Bind;
@@ -30,8 +33,8 @@ import utils.Helper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static String LOG_CAT = MainActivity.class.getSimpleName();
     private final static int COMPRESS_QUALITY = 85;
+    private final static String LOG_CAT = MainActivity.class.getSimpleName();
 
     @Bind(R.id.toolbar) Toolbar mToolbar_top;
     @Bind(R.id.custom_view) CustomView mCustomView;
@@ -84,8 +87,50 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_save:
                 saveDrawing();
                 break;
+            case R.id.action_color:
+                changeColor();
+                break;
         }
     }
+
+    int defaultColorR, defaultColorG, defaultColorB;
+    private ColorPicker cp;
+
+    private void changeColor() {
+        getRGBFromHexa(mCustomView.getColor());
+        cp.show();
+
+    /* On Click listener for the dialog, when the user select the color */
+        Button okColor = (Button)cp.findViewById(R.id.okColorButton);
+        okColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /* You can get single channel (value 0-255) */
+                /*selectedColorR = cp.getRed();
+                selectedColorG = cp.getGreen();
+                selectedColorB = cp.getBlue();*/
+
+                /* Or the android RGB Color (see the android Color class reference) */
+                selectedColorRGB = cp.getColor();
+                mCustomView.updateColor(selectedColorRGB);
+                cp.dismiss();
+            }
+        });
+
+    }
+
+    int selectedColorRGB;
+
+    private void getRGBFromHexa(int s) {
+        String hexColor = String.format("%06X", (0xFFFFFF & s));
+        int color = (int)Long.parseLong(hexColor, 16);
+        defaultColorR = (color >> 16) & 0xFF;
+        defaultColorG = (color >> 8) & 0xFF;
+        defaultColorB = (color >> 0) & 0xFF;
+        cp = new ColorPicker(MainActivity.this, defaultColorR, defaultColorG, defaultColorB);
+    }
+
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -185,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
             Toast savedToast = Toast.makeText(getApplicationContext(),
                     "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
             savedToast.show();
-            Log.d("imgSaved", imgSaved);
         }
 
         mCustomView.destroyDrawingCache();
