@@ -10,12 +10,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_share:
                 shareImage();
+                break;
+            case R.id.action_save:
+                saveDrawing();
+                break;
         }
     }
     // Storage Permissions
@@ -107,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             );
         }
     }
+
     private void shareImage() {
         mCustomView.setDrawingCacheEnabled(true);
         mCustomView.invalidate();
@@ -121,22 +128,8 @@ public class MainActivity extends AppCompatActivity {
         OutputStream outputStream;
         File file = new File(path, "android_drawing_app.png");
 
-
-
-
-
-
         file.getParentFile().mkdirs();
 
-        //File file = new File(dir);
-        /*if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
         try {
             file.createNewFile();
         } catch(Exception e) {
@@ -152,13 +145,50 @@ public class MainActivity extends AppCompatActivity {
             Log.e(LOG_CAT, e.getCause() + e.getMessage());
         }
 
-
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         shareIntent.setType("image/png");
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(shareIntent, "Share image"));
+    }
+
+    private void saveDrawing() {
+        String path = Environment.getExternalStorageDirectory().toString();
+        path += "/" + getString(R.string.app_name);
+        File dir = new File(path);
+        mCustomView.setDrawingCacheEnabled(true);
+
+        String imgTitle = "Drawing_" + System.currentTimeMillis() + ".png";
+        String imgSaved = MediaStore.Images.Media.insertImage(getContentResolver(), mCustomView.getDrawingCache(), imgTitle, "drawing to save");
+
+        try {
+            if(!dir.isDirectory() || !dir.exists()) {
+                dir.mkdirs();
+            }
+
+            mCustomView.setDrawingCacheEnabled(true);
+            File file = new File(path, imgTitle);
+            FileOutputStream fOut = new FileOutputStream(file);
+            Bitmap bitmap = mCustomView.getDrawingCache();
+            bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, fOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Uh Oh!");
+            alert.setMessage("Oops! Image could not be saved. Do you have enough space in your device?1");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
+
+        if(imgSaved!=null){
+            Toast savedToast = Toast.makeText(getApplicationContext(),
+                    "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+            savedToast.show();
+            Log.d("imgSaved", imgSaved);
+        }
+
+        mCustomView.destroyDrawingCache();
     }
 
     @Override
