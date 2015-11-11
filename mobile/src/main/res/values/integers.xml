@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="medium_size">20</integer>
+    <integer name="max_size">50</integer>
+    <integer name="min_size">1</integer>
 </resources>
