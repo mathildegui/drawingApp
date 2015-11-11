@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -76,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(mToolbar_top);
-
         checkStoragePermissions(this);
 
         Helper.init(this);
+        setSupportActionBar(mToolbar_top);
+
         mCustomView.setSaveEnabled(true);
 
         mToolbar_bottom.inflateMenu(R.menu.menu_drawing);
@@ -122,6 +125,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_color:
                 changeColor();
                 break;
+            case R.id.action_erase:
+                int color = Color.YELLOW;
+                Drawable background = mCustomView.getBackground();
+                if (background instanceof ColorDrawable) {
+                    color = ((ColorDrawable) background).getColor();
+
+                Log.d("THE COLOR BG", color + "");
+                }
+                mCustomView.updateColor(color);
+                break;
         }
     }
 
@@ -148,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         int color = (int)Long.parseLong(hexColor, 16);
         int defaultColorR = (color >> 16) & 0xFF;
         int defaultColorG = (color >> 8) & 0xFF;
-        int defaultColorB = (color) & 0xFF;
+        int defaultColorB = (color >> 0) & 0xFF;
         cp = new ColorPicker(MainActivity.this, defaultColorR, defaultColorG, defaultColorB);
     }
 

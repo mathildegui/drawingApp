@@ -67,6 +67,8 @@ public class CustomView extends View {
     }
 
     private void init() {
+        setBackgroundColor(Color.WHITE);
+
         mCurrentBrushSize = getResources().getInteger(R.integer.medium_size);
         mLastBrushSize    = mCurrentBrushSize;
 
