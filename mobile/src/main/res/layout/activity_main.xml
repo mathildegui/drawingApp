@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-   <android.support.design.widget.AppBarLayout
+   <!--<android.support.design.widget.AppBarLayout
        android:id="@+id/app_bar_layout"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -21,28 +21,170 @@
            android:background="?attr/colorPrimary"
            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-   </android.support.design.widget.AppBarLayout>
+   </android.support.design.widget.AppBarLayout>-->
 
     <com.mathilde.drawingapp.view.CustomView
         android:id="@+id/custom_view"
-        android:layout_below="@+id/app_bar_layout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/toolbar_bottom" />
+        android:layout_height="match_parent"/>
 
-    <android.support.v7.widget.Toolbar
+    <!--<android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_bottom"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:popupTheme="@style/AppTheme.PopupOverlay" />-->
 
-    <!--<android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
+        android:id="@+id/subfab_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:clickable="true"
-        android:src="@drawable/ic_cast_dark"/>-->
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_eraser_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_delete_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_undo_variant_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_redo_variant_white_36dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_brush_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_brush_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_eyedropper_variant_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <!--
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_pick_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_eyedropper_variant_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+             />-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_sd_white_24dp"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/action_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_action_share"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end"
+            android:visibility="gone"
+             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_cast_dark"
+            android:layout_margin="5dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp"
+            app:layout_anchor="@+id/toolbar_bottom"
+            app:layout_anchorGravity="bottom|right|end" />
+    </LinearLayout>
 </RelativeLayout>
