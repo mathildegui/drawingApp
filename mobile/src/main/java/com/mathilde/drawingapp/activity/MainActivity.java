@@ -1,13 +1,10 @@
 package com.mathilde.drawingapp.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -17,17 +14,12 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.mathilde.drawingapp.R;
 import com.mathilde.drawingapp.fragment.BrushSizeChooserFragment;
 import com.mathilde.drawingapp.utils.Helper;
@@ -52,26 +44,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ColorPicker cp;
     private int selectedColorRGB;
 
-    @Bind(R.id.custom_view)
-    CustomView mCustomView;
-    @Bind(R.id.fab)
-    FloatingActionButton mFab;
-    @Bind(R.id.action_brush_size)
-    FloatingActionButton mSubBrushSize;
-    @Bind(R.id.action_color)
-    FloatingActionButton mSubColor;
-    @Bind(R.id.action_delete)
-    FloatingActionButton mSubDelete;
-    @Bind(R.id.action_erase)
-    FloatingActionButton mSubErase;
-    @Bind(R.id.action_redo)
-    FloatingActionButton mSubRedo;
-    @Bind(R.id.action_save)
-    FloatingActionButton mSubSave;
-    @Bind(R.id.action_share)
-    FloatingActionButton mSubShare;
-    @Bind(R.id.action_undo)
-    FloatingActionButton mSubUndo;
+    @Bind(R.id.fab) FloatingActionButton mFab;
+    @Bind(R.id.custom_view) CustomView mCustomView;
+    @Bind(R.id.action_redo) FloatingActionButton mSubRedo;
+    @Bind(R.id.action_save) FloatingActionButton mSubSave;
+    @Bind(R.id.action_undo) FloatingActionButton mSubUndo;
+    @Bind(R.id.action_color) FloatingActionButton mSubColor;
+    @Bind(R.id.action_erase) FloatingActionButton mSubErase;
+    @Bind(R.id.action_share) FloatingActionButton mSubShare;
+    @Bind(R.id.action_delete) FloatingActionButton mSubDelete;
+    @Bind(R.id.action_brush_size) FloatingActionButton mSubBrushSize;
 
     public static void checkStoragePermissions(Activity activity) {
         if (ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE") != 0) {
@@ -80,15 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initClick() {
-        this.mFab.setOnClickListener(this);
-        this.mSubUndo.setOnClickListener(this);
-        this.mSubRedo.setOnClickListener(this);
-        this.mSubSave.setOnClickListener(this);
-        this.mSubShare.setOnClickListener(this);
-        this.mSubColor.setOnClickListener(this);
-        this.mSubErase.setOnClickListener(this);
-        this.mSubDelete.setOnClickListener(this);
-        this.mSubBrushSize.setOnClickListener(this);
+        mFab.setOnClickListener(this);
+        mSubUndo.setOnClickListener(this);
+        mSubRedo.setOnClickListener(this);
+        mSubSave.setOnClickListener(this);
+        mSubShare.setOnClickListener(this);
+        mSubColor.setOnClickListener(this);
+        mSubErase.setOnClickListener(this);
+        mSubDelete.setOnClickListener(this);
+        mSubBrushSize.setOnClickListener(this);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,14 +83,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setVisibility(int visibility) {
-        this.mSubUndo.setVisibility(visibility);
-        this.mSubRedo.setVisibility(visibility);
-        this.mSubSave.setVisibility(visibility);
-        this.mSubShare.setVisibility(visibility);
-        this.mSubColor.setVisibility(visibility);
-        this.mSubErase.setVisibility(visibility);
-        this.mSubDelete.setVisibility(visibility);
-        this.mSubBrushSize.setVisibility(visibility);
+        mSubUndo.setVisibility(visibility);
+        mSubRedo.setVisibility(visibility);
+        mSubSave.setVisibility(visibility);
+        mSubShare.setVisibility(visibility);
+        mSubColor.setVisibility(visibility);
+        mSubErase.setVisibility(visibility);
+        mSubDelete.setVisibility(visibility);
+        mSubBrushSize.setVisibility(visibility);
     }
 
     private void brushSizePicker() {

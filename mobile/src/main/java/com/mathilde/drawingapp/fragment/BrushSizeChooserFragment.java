@@ -18,12 +18,14 @@ import com.mathilde.drawingapp.listener.OnNewBrushSizeSelectedListener;
 
 public class BrushSizeChooserFragment extends DialogFragment {
     public static final String BRUSH_SIZE = "current_brush_size";
-    @Bind(R.id.seek_bar_brush_size) SeekBar brushSizeSeekBar;
-    @Bind(R.id.text_view_brush_size) TextView currentValue;
-    private int mCurrentBrushSize;
-    private OnNewBrushSizeSelectedListener mListener;
+
     @Bind(R.id.text_view_max_value) TextView maxValue;
     @Bind(R.id.text_view_min_value) TextView minValue;
+    @Bind(R.id.text_view_brush_size) TextView currentValue;
+    @Bind(R.id.seek_bar_brush_size) SeekBar brushSizeSeekBar;
+
+    private int mCurrentBrushSize;
+    private OnNewBrushSizeSelectedListener mListener;
 
     public void setOnNewBrushSizeSelectedListener(OnNewBrushSizeSelectedListener listener) {
         this.mListener = listener;
@@ -38,6 +40,7 @@ public class BrushSizeChooserFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Builder builder = new Builder(getActivity());
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.fragment_brush_size_chooser, null);
+
         ButterKnife.bind(this, dialogView);
         if (dialogView != null) {
             this.minValue.setText(String.valueOf(getResources().getInteger(R.integer.min_size)));
@@ -45,8 +48,8 @@ public class BrushSizeChooserFragment extends DialogFragment {
             if (this.mCurrentBrushSize > 0) {
                 this.currentValue.setText(getResources().getString(R.string.label_brush_size) + this.mCurrentBrushSize);
             }
-            this.brushSizeSeekBar.setProgress(this.mCurrentBrushSize);
-            this.brushSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            brushSizeSeekBar.setProgress(this.mCurrentBrushSize);
+            brushSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
                 int progressChanged = 0;
 
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

@@ -11,7 +11,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,8 +45,6 @@ public class CustomView extends View {
     private float mCurrentBrushSize, mLastBrushSize;
 
     //list for redo and undo actions
-    /*private List<Pair<Path, Integer>> paths = new ArrayList<>();
-    private List<Pair<Path, Integer>> undonePaths = new ArrayList<>();*/
     private List<MyCustomList> paths = new ArrayList<>();
     private List<MyCustomList> undonePaths = new ArrayList<>();
 
@@ -66,7 +63,6 @@ public class CustomView extends View {
     }
 
     public void updateColor (int color) {
-        //Pair p = new Pair(mDrawPath, color);
         MyCustomList list = new MyCustomList();
         list.path = mDrawPath;
         list.color = color;
@@ -96,8 +92,6 @@ public class CustomView extends View {
         mDrawPaint.setStyle(Paint.Style.STROKE);
         mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        //Paint mCanvasPaint = new Paint(Paint.DITHER_FLAG);
     }
 
     @Override
@@ -129,8 +123,6 @@ public class CustomView extends View {
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        //return super.onTouchEvent(event);
-
         float touchX = event.getX();
         float touchY = event.getY();
 
@@ -176,18 +168,17 @@ public class CustomView extends View {
     private void touch_up() {
         mDrawPath.lineTo(mX, mY);
         mCanvas.drawPath(mDrawPath, mDrawPaint);
-        //Pair p = new Pair(mDrawPath, mPaintColor);
         MyCustomList list = new MyCustomList();
         list.path = mDrawPath;
         list.color = mPaintColor;
         list.brush = mCurrentBrushSize;
+
         paths.add(list);
         mDrawPath = new Path();
     }
 
     /* Start new drawing */
     public void eraseAll() {
-        //mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         mDrawPath = new Path();
         paths.clear();
         undonePaths.clear();
@@ -220,10 +211,10 @@ public class CustomView extends View {
     public void setBrushSize(float newSize) {
         float pixelAmount = TypedValue.applyDimension(1, newSize, getResources().getDisplayMetrics());
         MyCustomList list = new MyCustomList();
-        //Pair p = new Pair(mDrawPath, mPaintColor);
         list.brush = pixelAmount;
-        list.color = Integer.valueOf(mPaintColor);
-        list.path = mDrawPath;
+        list.color = mPaintColor;
+        list.path  = mDrawPath;
+
         paths.add(list);
         mDrawPath = new Path();
         mCurrentBrushSize = pixelAmount;
@@ -234,15 +225,14 @@ public class CustomView extends View {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ss = new SavedState(superState);
 
-        ss.savedX = this.mX;
-        ss.savedY = this.mY;
+        ss.savedX = mX;
+        ss.savedY = mY;
 
         return ss;
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        //begin boilerplate code so parent classes can restore state
         if(!(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
             return;
@@ -252,8 +242,8 @@ public class CustomView extends View {
         super.onRestoreInstanceState(ss.getSuperState());
         //end
 
-        this.mX          = ss.savedX;
-        this.mY          = ss.savedY;
+        mX = ss.savedX;
+        mY = ss.savedY;
     }
 
     static class SavedState extends BaseSavedState {
