@@ -9,15 +9,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault" >
-        <activity
-            android:name=".MainActivity"
+        <com.mathilde.drawingapp.activity
+            android:name=".com.mathilde.drawingapp.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </com.mathilde.drawingapp.activity>
     </application>
 
 </manifest>
