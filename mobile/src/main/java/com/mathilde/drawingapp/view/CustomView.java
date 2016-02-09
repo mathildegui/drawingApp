@@ -53,9 +53,9 @@ public class CustomView extends View {
     }
 
     private class MyCustomList {
+        public Path path;
         public float brush;
         public Integer color;
-        public Path path;
     }
 
     public int getColor(){
@@ -64,11 +64,13 @@ public class CustomView extends View {
 
     public void updateColor (int color) {
         MyCustomList list = new MyCustomList();
-        list.path = mDrawPath;
-        list.color = color;
-        list.brush = mCurrentBrushSize;
+        list.path         = mDrawPath;
+        list.color        = color;
+        list.brush        = mCurrentBrushSize;
+
         paths.add(list);
-        mDrawPath = new Path();
+
+        mDrawPath   = new Path();
         mPaintColor = color;
     }
 
@@ -86,18 +88,18 @@ public class CustomView extends View {
         mDrawPath  = new Path();
         mDrawPaint = new Paint();
 
-        mDrawPaint.setColor(mPaintColor);
         mDrawPaint.setAntiAlias(true);
-        mDrawPaint.setStrokeWidth(mCurrentBrushSize);
+        mDrawPaint.setColor(mPaintColor);
         mDrawPaint.setStyle(Paint.Style.STROKE);
-        mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
         mDrawPaint.setStrokeCap(Paint.Cap.ROUND);
+        mDrawPaint.setStrokeJoin(Paint.Join.ROUND);
+        mDrawPaint.setStrokeWidth(mCurrentBrushSize);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         for(MyCustomList p : paths) {
-            mDrawPaint.setColor(p.color.intValue());
+            mDrawPaint.setColor(p.color);
             mDrawPaint.setStrokeWidth(p.brush);
             canvas.drawPath(p.path, mDrawPaint);
         }
@@ -108,11 +110,6 @@ public class CustomView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         //create canvas of certain device size
         super.onSizeChanged(w, h, oldw, oldh);
-
-        Log.d("W", w + "");
-        Log.d("H", h + "");
-        Log.d("oldw", oldw + "");
-        Log.d("oldh", oldh + "");
 
         //create Bitmap of certain w,.h
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -168,10 +165,11 @@ public class CustomView extends View {
     private void touch_up() {
         mDrawPath.lineTo(mX, mY);
         mCanvas.drawPath(mDrawPath, mDrawPaint);
+
         MyCustomList list = new MyCustomList();
-        list.path = mDrawPath;
-        list.color = mPaintColor;
-        list.brush = mCurrentBrushSize;
+        list.path         = mDrawPath;
+        list.color        = mPaintColor;
+        list.brush        = mCurrentBrushSize;
 
         paths.add(list);
         mDrawPath = new Path();
@@ -211,9 +209,9 @@ public class CustomView extends View {
     public void setBrushSize(float newSize) {
         float pixelAmount = TypedValue.applyDimension(1, newSize, getResources().getDisplayMetrics());
         MyCustomList list = new MyCustomList();
-        list.brush = pixelAmount;
-        list.color = mPaintColor;
-        list.path  = mDrawPath;
+        list.brush        = pixelAmount;
+        list.color        = mPaintColor;
+        list.path         = mDrawPath;
 
         paths.add(list);
         mDrawPath = new Path();
@@ -240,7 +238,6 @@ public class CustomView extends View {
 
         SavedState ss = (SavedState)state;
         super.onRestoreInstanceState(ss.getSuperState());
-        //end
 
         mX = ss.savedX;
         mY = ss.savedY;

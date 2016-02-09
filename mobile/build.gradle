@@ -4,13 +4,21 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+    /*signingConfigs {
+        storeFile file("keys/keystore.jks")
+        storePassword "keystore"
+        keyAlias "keystore-alias"
+        keyPassword "keystore"
+    }*/
+
     defaultConfig {
         applicationId "com.mathilde.drawingapp"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1
+        versionCode 2
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,7 +33,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
 
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:appcompat-v7:23.1.1'

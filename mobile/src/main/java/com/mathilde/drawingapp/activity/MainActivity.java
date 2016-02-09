@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             Builder alert = new Builder(this);
             alert.setTitle("Uh Oh!");
-            alert.setMessage("Oops! Image could not be saved. Do you have enough space in your device?1");
+            alert.setMessage("Oops! Image could not be saved. Do you have enough space in your device?");
             alert.setPositiveButton("OK", null);
             alert.show();
         }
@@ -180,15 +180,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Drawing saved to Gallery!", Toast.LENGTH_SHORT).show();
         }
         this.mCustomView.destroyDrawingCache();
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     private void deleteDialog() {
@@ -218,38 +209,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     color = ((ColorDrawable) background).getColor();
                 }
                 this.mCustomView.updateColor(color);
-                return;
+                break;
             case R.id.action_delete:
                 deleteDialog();
-                return;
+                break;
             case R.id.action_undo:
                 this.mCustomView.undo();
-                return;
+                break;
             case R.id.action_redo:
                 this.mCustomView.redo();
-                return;
+                break;
             case R.id.action_color:
                 changeColor();
-                return;
+                break;
             case R.id.action_brush_size:
                 brushSizePicker();
-                return;
+                break;
             case R.id.action_save:
                 saveDrawing();
-                return;
+                break;
             case R.id.action_share:
                 shareImage();
-                return;
+                break;
             case R.id.fab:
                 if (this.mSubUndo.getVisibility() == View.GONE) {
                     setVisibility(View.VISIBLE);
-                    return;
+                    break;
                 } else {
                     setVisibility(View.GONE);
-                    return;
+                    break;
                 }
-            default:
-                return;
         }
     }
 }

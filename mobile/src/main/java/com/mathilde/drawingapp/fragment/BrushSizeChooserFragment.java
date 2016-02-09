@@ -28,7 +28,7 @@ public class BrushSizeChooserFragment extends DialogFragment {
     private OnNewBrushSizeSelectedListener mListener;
 
     public void setOnNewBrushSizeSelectedListener(OnNewBrushSizeSelectedListener listener) {
-        this.mListener = listener;
+        mListener = listener;
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -43,25 +43,25 @@ public class BrushSizeChooserFragment extends DialogFragment {
 
         ButterKnife.bind(this, dialogView);
         if (dialogView != null) {
-            this.minValue.setText(String.valueOf(getResources().getInteger(R.integer.min_size)));
-            this.maxValue.setText(String.valueOf(getResources().getInteger(R.integer.max_size)));
-            if (this.mCurrentBrushSize > 0) {
-                this.currentValue.setText(getResources().getString(R.string.label_brush_size) + this.mCurrentBrushSize);
+            minValue.setText(String.valueOf(getResources().getInteger(R.integer.min_size)));
+            maxValue.setText(String.valueOf(getResources().getInteger(R.integer.max_size)));
+            if (mCurrentBrushSize > 0) {
+                currentValue.setText(getResources().getString(R.string.label_brush_size) + mCurrentBrushSize);
             }
-            brushSizeSeekBar.setProgress(this.mCurrentBrushSize);
+            brushSizeSeekBar.setProgress(mCurrentBrushSize);
             brushSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
                 int progressChanged = 0;
 
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    this.progressChanged = progress;
-                    BrushSizeChooserFragment.this.currentValue.setText(BrushSizeChooserFragment.this.getResources().getString(R.string.label_brush_size) + progress);
+                    progressChanged = progress;
+                    currentValue.setText(BrushSizeChooserFragment.this.getResources().getString(R.string.label_brush_size) + progress);
                 }
 
                 public void onStartTrackingTouch(SeekBar seekBar) {
                 }
 
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    BrushSizeChooserFragment.this.mListener.OnNewBrushSizeSelected((float) this.progressChanged);
+                    mListener.OnNewBrushSizeSelected((float) progressChanged);
                 }
             });
         }
@@ -88,7 +88,7 @@ public class BrushSizeChooserFragment extends DialogFragment {
         if (b != null && b.containsKey(BRUSH_SIZE)) {
             int brushSize = b.getInt(BRUSH_SIZE, 0);
             if (brushSize != 0) {
-                this.mCurrentBrushSize = brushSize;
+                mCurrentBrushSize = brushSize;
             }
         }
     }
